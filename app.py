@@ -20,6 +20,7 @@ class Form(db.Model):
     email = db.Column(db.String(80))
     username = db.Column(db.String(80))
     password = db.Column(db.String(80))
+    #confirm_password = db.Column(db.String(80))
     type = db.Column(db.String(80))
 
 
@@ -33,8 +34,15 @@ def index():
         email = request.form["email"]
         username = request.form["username"]
         password = request.form["password"]
-        confirm_password = request.form["password"]
-        type = request.form["re-enter_password"]
+        confirm_password = request.form["re-enter_password"]
+        type = request.form["type"]
+
+        signup_form = Form(first_name=first_name, last_name=last_name,
+                           email=email, username=username,password=password,
+                           type=type)
+
+        db.session.add(signup_form)
+        db.session.commit()
 
     return render_template("index.html")
 

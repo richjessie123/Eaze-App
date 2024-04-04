@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash
 from flask_sqlalchemy import SQLAlchemy
 
 # Instantiating the app
@@ -20,7 +20,7 @@ class Form(db.Model):
     email = db.Column(db.String(80))
     username = db.Column(db.String(80))
     password = db.Column(db.String(80))
-    #confirm_password = db.Column(db.String(80))
+    # confirm_password = db.Column(db.String(80))
     type = db.Column(db.String(80))
 
 
@@ -38,11 +38,14 @@ def index():
         type = request.form["type"]
 
         signup_form = Form(first_name=first_name, last_name=last_name,
-                           email=email, username=username,password=password,
+                           email=email, username=username, password=password,
                            type=type)
 
-        db.session.add(signup_form)
-        db.session.commit()
+        if password == confirm_password:
+            db.session.add(signup_form)
+            db.session.commit()
+        else:
+            flash("Passwords do not match", "error")
 
     return render_template("index.html")
 

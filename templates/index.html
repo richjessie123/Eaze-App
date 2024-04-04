@@ -37,6 +37,7 @@
                 <div class="form-group mb-4">
                     <label for="re-enter_password">Confirm Password:</label>
                     <input class="form-control" type="password" id="re-enter_password" name="re-enter_password" required>
+                     <div id="password_error" class="text-danger" style="display: none;">Passwords do not match!</div>
                 </div>
                 <div class="form-group mb-4">
                     <label>I am a:</label>
@@ -52,15 +53,47 @@
                         <label class="btn btn-outline-secondary" for="student">Student:</label>
                     </div>
                 </div>
-                <button class="btn btn-secondary mb-4" type="submit">Submit</button>
+                <button class="btn btn-secondary mb-4" type="submit" id="signup_btn">Sign Up</button>
                 <div class="form-group mb-4">
                     <label>Already a member?</label>
                     <br>
                     <button class="btn btn-secondary mb-4" type="button">Sign In</button>
                 </div>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="alert alert-danger">
+                    {% for message in messages %}
+                        {{ messages }}
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endwith %}
             </form>
         </div>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+        <script> document.addEventListener("DOMContentLoaded", function() {
+            var passwordField = document.getElementById("password");
+            var confirmPasswordField = document.getElementById("re-enter_password");
+            var passwordError = document.getElementById("password_error");
+            var signupButton = document.getElementById("signup_btn");
+
+            confirmPasswordField.addEventListener("keyup", function() {
+                // Check if passwords match
+
+                if (passwordField.value !== confirmPasswordField.value) {
+                    // Display error message
+                    passwordError.style.display = "block";
+                    // Hide signup button
+                    signupButton.disabled = true;
+                } else {
+                    // Hide error message if passwords match
+                    passwordError.style.display = "none";
+                    // Show signup button
+                    signupButton.disabled = false;
+                }
+            });
+        });
+    </script>
     </body>
 </html>

@@ -27,6 +27,10 @@ class Form(db.Model):
 # Handle HTTP Requests
 @app.route("/", methods=["GET", "POST"])
 def index():
+    # Get email and username entries
+    email_entries = [email.email for email in Form.query.all()]
+    username_entries = [username.username for username in Form.query.all()]
+
     if request.method == "POST":
         # Extracting variables of sign up form from html file
         first_name = request.form["first_name"]
@@ -41,12 +45,20 @@ def index():
                            email=email, username=username, password=password,
                            type=type)
 
-        if password == confirm_password:
+        # Display error messages if username and email already exist
+        if username in username_entries:
+            flash("There is an account with this username,"
+                  " try a new username or sign in if you already have an account", "info")
+        if email in email_entries:
+            flash("There is an account with this email,"
+                  " try a new email or sign in if you already have an account", "info")
+
+        # Only add data to database, if password and confirm password match
+        if password == confirm_password and username not in username_entries and email not in email_entries:
             db.session.add(signup_form)
             db.session.commit()
-        else:
-            flash("Passwords do not match", "error")
 
+    # if email ==
     return render_template("index.html")
 
 
